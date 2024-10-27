@@ -8,17 +8,19 @@
 
 /* Begin PBXBuildFile section */
 		C502F9F92CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502F9F82CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift */; };
-		C502F9FB2CCDAF6D006F9D1B /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502F9FA2CCDAF6D006F9D1B /* ContentView.swift */; };
+		C502F9FB2CCDAF6D006F9D1B /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */; };
 		C502F9FD2CCDAF6E006F9D1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C502F9FC2CCDAF6E006F9D1B /* Assets.xcassets */; };
 		C502FA002CCDAF6E006F9D1B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C502F9FF2CCDAF6E006F9D1B /* Preview Assets.xcassets */; };
+		C59D79412CCE8D1E007D8AC8 /* CoreMLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		C502F9F52CCDAF6D006F9D1B /* Fitness Trainer App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Fitness Trainer App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C502F9F82CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Fitness_Trainer_AppApp.swift; sourceTree = "<group>"; };
-		C502F9FA2CCDAF6D006F9D1B /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		C502F9FC2CCDAF6E006F9D1B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C502F9FF2CCDAF6E006F9D1B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,8 +53,9 @@
 		C502F9F72CCDAF6D006F9D1B /* Fitness Trainer App */ = {
 			isa = PBXGroup;
 			children = (
+				C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */,
 				C502F9F82CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift */,
-				C502F9FA2CCDAF6D006F9D1B /* ContentView.swift */,
+				C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */,
 				C502F9FC2CCDAF6E006F9D1B /* Assets.xcassets */,
 				C502F9FE2CCDAF6E006F9D1B /* Preview Content */,
 			);
@@ -137,7 +140,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C502F9FB2CCDAF6D006F9D1B /* ContentView.swift in Sources */,
+				C59D79412CCE8D1E007D8AC8 /* CoreMLManager.swift in Sources */,
+				C502F9FB2CCDAF6D006F9D1B /* CameraView.swift in Sources */,
 				C502F9F92CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -270,6 +274,7 @@
 				DEVELOPMENT_TEAM = NHFF82TKTT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for live video feed in the fitness trainer app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -299,6 +304,7 @@
 				DEVELOPMENT_TEAM = NHFF82TKTT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSCameraUsageDescription = "We need access to your camera for live video feed in the fitness trainer app.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
