@@ -1,46 +1,49 @@
-//
-//  CoreMLManager.swift
-//  Fitness Trainer App
-//
-//  Created by Ryan Nguyen on 2024-10-27.
-//
+    //
+    //  CoreMLManager.swift
+    //  Fitness Trainer App
+    //
+    //  Created by Ryan Nguyen on 2024-10-27.
+    //
 
+    import CoreML
+    import Vision
+    import AVFoundation
 
-import CoreML
-import Vision
-import AVFoundation
+    class CoreMLManager {
+        // CoreML Model
+        private let model: VNCoreMLModel
 
-class CoreMLManager {
-    // CoreML Model
-    private let model: VNCoreMLModel
-
-    init() {
-        do {
-            // Replace "YourModel" with your actual model's name
-            self.model = try VNCoreMLModel(for: YourModel().model)
-        } catch {
-            fatalError("Failed to load CoreML model: \(error)")
-        }
-    }
-
-    // Function to process a video frame and perform a prediction
-    func performPrediction(pixelBuffer: CVPixelBuffer, completion: @escaping (String, Float) -> Void) {
-        // Create a request using the CoreML model
-        let request = VNCoreMLRequest(model: model) { (request, error) in
-            guard let results = request.results as? [VNClassificationObservation], let firstResult = results.first else {
-                return
+        init() {
+            do {
+                let config = MLModelConfiguration()
+                let coreMLModel = try cpmmodel(configuration: config).model
+                self.model = try VNCoreMLModel(for: coreMLModel)
+            } catch {
+                fatalError("Failed to load CoreML model: \(error)")
             }
-            
-            // Returning the prediction identifier and confidence
-            completion(firstResult.identifier, firstResult.confidence)
         }
-        
-        // Perform the request on the pixelBuffer (frame from the camera)
-        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
-        do {
-            try handler.perform([request])
-        } catch {
-            print("Failed to perform CoreML request: \(error)")
+
+        func performPrediction(pixelBuffer: CVPixelBuffer, completion: @escaping (MLMultiArray) -> Void) {
+            let request = VNCoreMLRequest(model: model) { (request, error) in
+                if let error = error {
+                    print("Error in CoreML prediction: \(error)")
+                    return
+                }
+
+                guard let results = request.results as? [VNCoreMLFeatureValueObservation],
+                      let multiArray = results.first?.featureValue.multiArrayValue else {
+                    print("No multiArray result found")
+                    return
+                }
+
+                completion(multiArray)
+            }
+
+            let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
+            do {
+                try handler.perform([request])
+            } catch {
+                print("Failed to perform CoreML request: \(error)")
+            }
         }
     }
-}
