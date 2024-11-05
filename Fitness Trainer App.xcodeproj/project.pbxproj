@@ -11,6 +11,12 @@
 		C502F9FB2CCDAF6D006F9D1B /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */; };
 		C502F9FD2CCDAF6E006F9D1B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C502F9FC2CCDAF6E006F9D1B /* Assets.xcassets */; };
 		C502FA002CCDAF6E006F9D1B /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = C502F9FF2CCDAF6E006F9D1B /* Preview Assets.xcassets */; };
+		C535E41B2CD15F8500B7A760 /* PoseEstimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E41A2CD15F7A00B7A760 /* PoseEstimationManager.swift */; };
+		C535E41D2CD15FED00B7A760 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E41C2CD15FE800B7A760 /* CameraViewController.swift */; };
+		C535E41F2CD1601000B7A760 /* VideoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E41E2CD1600B00B7A760 /* VideoCapture.swift */; };
+		C535E4212CD1604600B7A760 /* KeypointsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E4202CD1604300B7A760 /* KeypointsListView.swift */; };
+		C535E4232CD1606500B7A760 /* PosePoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E4222CD1606100B7A760 /* PosePoint.swift */; };
+		C535E4252CD1610000B7A760 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E4242CD160F800B7A760 /* CameraPreview.swift */; };
 		C59D79412CCE8D1E007D8AC8 /* CoreMLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */; };
 		C5F70D532CCFE30200B3491A /* cpmmodel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D522CCFE30200B3491A /* cpmmodel.mlmodel */; };
 		C5F70D5F2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D5D2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift */; };
@@ -26,6 +32,12 @@
 		C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		C502F9FC2CCDAF6E006F9D1B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		C502F9FF2CCDAF6E006F9D1B /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		C535E41A2CD15F7A00B7A760 /* PoseEstimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PoseEstimationManager.swift; sourceTree = "<group>"; };
+		C535E41C2CD15FE800B7A760 /* CameraViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
+		C535E41E2CD1600B00B7A760 /* VideoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoCapture.swift; sourceTree = "<group>"; };
+		C535E4202CD1604300B7A760 /* KeypointsListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeypointsListView.swift; sourceTree = "<group>"; };
+		C535E4222CD1606100B7A760 /* PosePoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PosePoint.swift; sourceTree = "<group>"; };
+		C535E4242CD160F800B7A760 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreMLManager.swift; sourceTree = "<group>"; };
 		C5F70D522CCFE30200B3491A /* cpmmodel.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = cpmmodel.mlmodel; sourceTree = "<group>"; };
 		C5F70D5A2CCFF94E00B3491A /* PredictedPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictedPoint.swift; sourceTree = "<group>"; };
@@ -65,6 +77,12 @@
 		C502F9F72CCDAF6D006F9D1B /* Fitness Trainer App */ = {
 			isa = PBXGroup;
 			children = (
+				C535E4242CD160F800B7A760 /* CameraPreview.swift */,
+				C535E4222CD1606100B7A760 /* PosePoint.swift */,
+				C535E4202CD1604300B7A760 /* KeypointsListView.swift */,
+				C535E41E2CD1600B00B7A760 /* VideoCapture.swift */,
+				C535E41C2CD15FE800B7A760 /* CameraViewController.swift */,
+				C535E41A2CD15F7A00B7A760 /* PoseEstimationManager.swift */,
 				C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */,
 				C502F9F82CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift */,
 				C502F9FA2CCDAF6D006F9D1B /* CameraView.swift */,
@@ -166,12 +184,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C535E4252CD1610000B7A760 /* CameraPreview.swift in Sources */,
+				C535E41D2CD15FED00B7A760 /* CameraViewController.swift in Sources */,
 				C5F70D5F2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift in Sources */,
+				C535E41B2CD15F8500B7A760 /* PoseEstimationManager.swift in Sources */,
 				C5F70D602CCFF94E00B3491A /* HeatmapPostProcessor.swift in Sources */,
+				C535E41F2CD1601000B7A760 /* VideoCapture.swift in Sources */,
 				C5F70D612CCFF94E00B3491A /* MovingAverageFilter.swift in Sources */,
 				C5F70D622CCFF94E00B3491A /* PredictedPoint.swift in Sources */,
 				C5F70D532CCFE30200B3491A /* cpmmodel.mlmodel in Sources */,
 				C5F70D642CCFFB1E00B3491A /* DrawingJointView.swift in Sources */,
+				C535E4232CD1606500B7A760 /* PosePoint.swift in Sources */,
+				C535E4212CD1604600B7A760 /* KeypointsListView.swift in Sources */,
 				C59D79412CCE8D1E007D8AC8 /* CoreMLManager.swift in Sources */,
 				C502F9FB2CCDAF6D006F9D1B /* CameraView.swift in Sources */,
 				C502F9F92CCDAF6D006F9D1B /* Fitness_Trainer_AppApp.swift in Sources */,

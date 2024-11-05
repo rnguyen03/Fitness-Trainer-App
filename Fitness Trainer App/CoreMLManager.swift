@@ -23,6 +23,10 @@
             }
         }
 
+        public func getModel() -> VNCoreMLModel {
+            return model
+        }
+
         func performPrediction(pixelBuffer: CVPixelBuffer, completion: @escaping (MLMultiArray) -> Void) {
             let request = VNCoreMLRequest(model: model) { (request, error) in
                 if let error = error {
