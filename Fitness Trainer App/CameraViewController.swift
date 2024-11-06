@@ -10,16 +10,24 @@ import AVFoundation
 import CoreVideo
 import Vision
 
+import UIKit
+import AVFoundation
+import CoreVideo
+import Vision
+
 class CameraViewController: UIViewController, VideoCaptureDelegate {
     var videoCapture: VideoCapture?
     var onKeypointsUpdate: (([PosePoint]) -> Void)?
-    let poseEstimationManager = PoseEstimationManager()
-
+    private var movingAverageFilters = [MovingAverageFilter]()
+    private var request: VNCoreMLRequest?
+    private let poseEstimationManager = PoseEstimationManager()
     var drawingJointView = DrawingJointView()
     var isInferencing = false
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupVisionRequest()
+        
         videoCapture?.setUp { success in
             if success {
                 self.setupCameraPreview()
@@ -27,6 +35,13 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
             }
         }
         videoCapture?.delegate = self
+    }
+
+    func setupVisionRequest() {
+        request = VNCoreMLRequest(model: poseEstimationManager.getModel()) { [weak self] request, error in
+            self?.visionRequestDidComplete(request: request, error: error)
+        }
+        request?.imageCropAndScaleOption = .scaleFill
     }
 
     func setupCameraPreview() {
@@ -44,30 +59,49 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
     func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame pixelBuffer: CVPixelBuffer, timestamp: CMTime) {
         if !isInferencing {
             isInferencing = true
-            poseEstimationManager.predictUsingVision(pixelBuffer: pixelBuffer) { keypoints in
-                DispatchQueue.main.async {
-                    self.drawingJointView.bodyPoints = keypoints.compactMap { posePoint in
-                        // Parse the point string, expecting a format like "(x, y)"
-                        let coordinates = posePoint.point
-                            .trimmingCharacters(in: CharacterSet(charactersIn: "()"))
-                            .split(separator: ",")
-                            .compactMap { Double($0.trimmingCharacters(in: .whitespaces)) }
-                        
-                        // Ensure we have both x and y values before creating a PredictedPoint
-                        guard coordinates.count == 2 else { return nil }
-                        
-                        let point = CGPoint(x: coordinates[0], y: coordinates[1])
-                        // Assuming confidence can be converted to Double
-                        let confidence = Double(posePoint.confidence) ?? 0.0
-                        return PredictedPoint(maxPoint: point, maxConfidence: confidence)
-                    }
-                    
-                    self.onKeypointsUpdate?(keypoints)
-                    self.isInferencing = false
-                }
-
-            }
+            predictUsingVision(pixelBuffer: pixelBuffer)
         }
+    }
+
+    private func predictUsingVision(pixelBuffer: CVPixelBuffer) {
+        guard let request = self.request else { return }
+        let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
+        try? handler.perform([request])
+    }
+
+    private func visionRequestDidComplete(request: VNRequest, error: Error?) {
+        guard let observations = request.results as? [VNCoreMLFeatureValueObservation],
+              let heatmaps = observations.first?.featureValue.multiArrayValue else {
+            isInferencing = false
+            return
+        }
+
+        var predictedPoints = poseEstimationManager.postProcessor.convertToPredictedPoints(from: heatmaps)
+
+        if movingAverageFilters.count != predictedPoints.count {
+            movingAverageFilters = predictedPoints.map { _ in MovingAverageFilter(limit: 3) }
+        }
+
+        for (index, point) in predictedPoints.enumerated() {
+            movingAverageFilters[index].add(element: point)
+            predictedPoints[index] = movingAverageFilters[index].averagedValue()
+        }
+
+        DispatchQueue.main.async {
+            self.drawingJointView.bodyPoints = predictedPoints
+
+            // Ensure each keypoint is labeled correctly
+            let labeledKeypoints: [PosePoint] = predictedPoints.enumerated().compactMap { index, point in
+                guard let point = point else { return nil }
+                let label = PoseEstimationForMobileConstant.pointLabels[index]
+                return PosePoint(label: label, point: String(format: "(%.3f, %.3f)", point.maxPoint.x, point.maxPoint.y), confidence: String(format: "%.2f", point.maxConfidence))
+            }
+
+            // Update the keypoints with labels in the UI
+            self.onKeypointsUpdate?(labeledKeypoints)
+            self.isInferencing = false
+        }
+
     }
 
 }

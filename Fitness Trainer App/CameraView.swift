@@ -1,4 +1,5 @@
 import SwiftUI
+import SwiftUI
 import AVFoundation
 
 struct CameraView: View {
@@ -7,39 +8,22 @@ struct CameraView: View {
     var videoCapture = VideoCapture()
     
     @State private var keypoints: [PosePoint] = []
-    let movingAverageFilters = Array(repeating: MovingAverageFilter(limit: 3), count: 14)
-    let kalmanFilters = Array(repeating: KalmanFilter(), count: 14)
 
-    @State private var smoothingIntensity: Double = 0.5
-    @State private var filterEffect: Bool = true
-    
     var body: some View {
         ZStack {
             if isCameraAuthorized {
-                VStack {
+                VStack(spacing: 20) {  // Add spacing between camera and keypoints
                     CameraPreview(videoCapture: videoCapture, keypoints: $keypoints)
-                        .edgesIgnoringSafeArea(.all)
-                        .frame(height: 400)
+                        .frame(height: 500) // Make CameraPreview larger
+                        .padding(.top, 20) // Add padding from the top of the screen
                     
-                    VStack {
-                        Text("Smoothing Intensity: \(String(format: "%.2f", smoothingIntensity))")
-                            .font(.headline)
-                            .padding(.top)
-                        
-                        Slider(value: $smoothingIntensity, in: 0...1)
-                            .padding()
-
-                        Toggle(isOn: $filterEffect) {
-                            Text("Enable Filters")
+                    ScrollView {
+                        VStack {
+                            KeypointsListView(keypoints: keypoints)
                         }
                         .padding()
                     }
-                    
-                    ScrollView {
-                        KeypointsListView(keypoints: keypoints)
-                            .frame(height: 200)
-                    }
-                    .padding()
+                    .frame(height: 200) // Reduce height of ScrollView for the keypoints list
                 }
             } else {
                 Text("Camera access is required to use this feature.")
