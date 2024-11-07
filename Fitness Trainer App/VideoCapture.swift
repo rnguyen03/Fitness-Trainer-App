@@ -41,12 +41,33 @@ public class VideoCapture: NSObject {
         // Remove existing inputs
         captureSession.inputs.forEach { captureSession.removeInput($0) }
         
-        guard let captureDevice = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: cameraPosition) else {
+        let deviceType: AVCaptureDevice.DeviceType = (cameraPosition == .front) ? .builtInTrueDepthCamera : .builtInWideAngleCamera
+        guard let captureDevice = AVCaptureDevice.default(deviceType, for: .video, position: cameraPosition) else {
             print("Error: No video devices available")
             completion(false)
             return
         }
         
+        // Enable continuous autofocus and auto exposure
+        do {
+            try captureDevice.lockForConfiguration()
+            
+            // Set continuous autofocus if supported
+            if captureDevice.isFocusModeSupported(.continuousAutoFocus) {
+                captureDevice.focusMode = .continuousAutoFocus
+            }
+            
+            // Set continuous auto exposure if supported
+            if captureDevice.isExposureModeSupported(.continuousAutoExposure) {
+                captureDevice.exposureMode = .continuousAutoExposure
+            }
+            
+            captureDevice.unlockForConfiguration()
+        } catch {
+            print("Error configuring autofocus and exposure: \(error)")
+        }
+        
+        // Create and add input
         guard let videoInput = try? AVCaptureDeviceInput(device: captureDevice) else {
             print("Error: Could not create AVCaptureDeviceInput")
             completion(false)
@@ -58,10 +79,11 @@ public class VideoCapture: NSObject {
         }
         
         let previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer.videoGravity = AVLayerVideoGravity.resizeAspect
+        previewLayer.videoGravity = .resizeAspect
         previewLayer.connection?.videoOrientation = .portrait
         self.previewLayer = previewLayer
         
+        // Video output settings
         let settings: [String : Any] = [
             kCVPixelBufferPixelFormatTypeKey as String: NSNumber(value: kCVPixelFormatType_32BGRA),
         ]
@@ -74,11 +96,12 @@ public class VideoCapture: NSObject {
             captureSession.addOutput(videoOutput)
         }
         
-        videoOutput.connection(with: AVMediaType.video)?.videoOrientation = .portrait
+        videoOutput.connection(with: .video)?.videoOrientation = .portrait
         captureSession.commitConfiguration()
         
         completion(true)
     }
+
     
     public func start() {
         sessionQueue.async {
