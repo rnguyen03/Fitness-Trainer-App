@@ -19,7 +19,6 @@
 		C535E4252CD1610000B7A760 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C535E4242CD160F800B7A760 /* CameraPreview.swift */; };
 		C59D79412CCE8D1E007D8AC8 /* CoreMLManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C59D79402CCE8D1E007D8AC8 /* CoreMLManager.swift */; };
 		C5F70D532CCFE30200B3491A /* cpmmodel.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D522CCFE30200B3491A /* cpmmodel.mlmodel */; };
-		C5F70D5F2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D5D2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift */; };
 		C5F70D602CCFF94E00B3491A /* HeatmapPostProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D5B2CCFF94E00B3491A /* HeatmapPostProcessor.swift */; };
 		C5F70D612CCFF94E00B3491A /* MovingAverageFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D5C2CCFF94E00B3491A /* MovingAverageFilter.swift */; };
 		C5F70D622CCFF94E00B3491A /* PredictedPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F70D5A2CCFF94E00B3491A /* PredictedPoint.swift */; };
@@ -43,7 +42,6 @@
 		C5F70D5A2CCFF94E00B3491A /* PredictedPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PredictedPoint.swift; sourceTree = "<group>"; };
 		C5F70D5B2CCFF94E00B3491A /* HeatmapPostProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeatmapPostProcessor.swift; sourceTree = "<group>"; };
 		C5F70D5C2CCFF94E00B3491A /* MovingAverageFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovingAverageFilter.swift; sourceTree = "<group>"; };
-		C5F70D5D2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+CVPixelBuffer.swift"; sourceTree = "<group>"; };
 		C5F70D632CCFFB1E00B3491A /* DrawingJointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingJointView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -109,7 +107,6 @@
 				C5F70D5A2CCFF94E00B3491A /* PredictedPoint.swift */,
 				C5F70D5B2CCFF94E00B3491A /* HeatmapPostProcessor.swift */,
 				C5F70D5C2CCFF94E00B3491A /* MovingAverageFilter.swift */,
-				C5F70D5D2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -142,7 +139,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1430;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 1600;
 				TargetAttributes = {
 					C502F9F42CCDAF6D006F9D1B = {
 						CreatedOnToolsVersion = 14.3;
@@ -186,7 +183,6 @@
 			files = (
 				C535E4252CD1610000B7A760 /* CameraPreview.swift in Sources */,
 				C535E41D2CD15FED00B7A760 /* CameraViewController.swift in Sources */,
-				C5F70D5F2CCFF94E00B3491A /* UIImage+CVPixelBuffer.swift in Sources */,
 				C535E41B2CD15F8500B7A760 /* PoseEstimationManager.swift in Sources */,
 				C5F70D602CCFF94E00B3491A /* HeatmapPostProcessor.swift in Sources */,
 				C535E41F2CD1601000B7A760 /* VideoCapture.swift in Sources */,
@@ -209,6 +205,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -241,6 +238,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -269,6 +267,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -301,6 +300,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
