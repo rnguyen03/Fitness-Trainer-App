@@ -38,10 +38,10 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
     }
 
     func resetInferencingState() {
-            isInferencing = false
-            movingAverageFilters.removeAll()
-            onKeypointsUpdate?([])
-        }
+        isInferencing = false
+        movingAverageFilters.removeAll()
+        onKeypointsUpdate?([])
+    }
 
     func setupVisionRequest() {
         request = VNCoreMLRequest(model: poseEstimationManager.getModel()) { [weak self] request, error in
@@ -52,7 +52,6 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
 
     func setupCameraPreview() {
         DispatchQueue.main.async {
-            // Remove any existing preview layers before adding a new one
             self.view.layer.sublayers?.forEach { layer in
                 if layer is AVCaptureVideoPreviewLayer {
                     layer.removeFromSuperlayer()
@@ -64,13 +63,11 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
                 self.view.layer.addSublayer(previewLayer)
             }
 
-            // Add the joint drawing view layer on top of the camera preview
             self.drawingJointView.frame = self.view.bounds
             self.drawingJointView.backgroundColor = .clear
             self.view.addSubview(self.drawingJointView)
         }
     }
-
 
     func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame pixelBuffer: CVPixelBuffer, timestamp: CMTime) {
         if !isInferencing {
@@ -80,7 +77,6 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
     }
 
     func predictUsingVision(pixelBuffer: CVPixelBuffer) {
-        // Ensure the Vision request exists and is set up
         guard let request = self.request else { return }
         
         let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
@@ -101,6 +97,15 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
 
         var predictedPoints = poseEstimationManager.postProcessor.convertToPredictedPoints(from: heatmaps)
 
+        // Flip the points horizontally if using the front camera
+        if videoCapture?.currentPosition == .front {
+            predictedPoints = predictedPoints.map { predictedPoint in
+                guard let point = predictedPoint else { return nil }
+                let flippedPoint = CGPoint(x: 1 - point.maxPoint.x, y: point.maxPoint.y)
+                return PredictedPoint(maxPoint: flippedPoint, maxConfidence: point.maxConfidence)
+            }
+        }
+
         if movingAverageFilters.count != predictedPoints.count {
             movingAverageFilters = predictedPoints.map { _ in MovingAverageFilter(limit: 3) }
         }
@@ -113,18 +118,15 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
         DispatchQueue.main.async {
             self.drawingJointView.bodyPoints = predictedPoints
 
-            // Ensure each keypoint is labeled correctly
             let labeledKeypoints: [PosePoint] = predictedPoints.enumerated().compactMap { index, point in
                 guard let point = point else { return nil }
                 let label = PoseEstimationForMobileConstant.pointLabels[index]
                 return PosePoint(label: label, point: String(format: "(%.3f, %.3f)", point.maxPoint.x, point.maxPoint.y), confidence: String(format: "%.2f", point.maxConfidence))
             }
 
-            // Update the keypoints with labels in the UI
             self.onKeypointsUpdate?(labeledKeypoints)
             self.isInferencing = false
         }
-
     }
 
 }
