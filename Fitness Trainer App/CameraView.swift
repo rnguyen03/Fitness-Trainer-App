@@ -6,16 +6,17 @@ struct CameraView: View {
     @State private var isCameraAuthorized: Bool = false
     @State private var showAlert: Bool = false
     var videoCapture = VideoCapture()
+    @State private var cameraViewController = CameraViewController()
     
     @State private var keypoints: [PosePoint] = []
 
     var body: some View {
         ZStack {
             if isCameraAuthorized {
-                VStack(spacing: 20) {  // Add spacing between camera and keypoints
+                VStack(spacing: 20) {
                     CameraPreview(videoCapture: videoCapture, keypoints: $keypoints)
-                        .frame(height: 500) // Make CameraPreview larger
-                        .padding(.top, 20) // Add padding from the top of the screen
+                        .frame(height: 500)
+                        .padding(.top, 20)
                     
                     ScrollView {
                         VStack {
@@ -23,7 +24,26 @@ struct CameraView: View {
                         }
                         .padding()
                     }
-                    .frame(height: 200) // Reduce height of ScrollView for the keypoints list
+                    .frame(height: 200)
+                    
+                    // Flip Camera Button
+                    Button(action: {
+                        videoCapture.stop()  // Stop the video session
+                        cameraViewController.resetInferencingState() // Reset any inferences before switching
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            videoCapture.switchCamera()  // Switch camera after a brief delay
+                            videoCapture.start() // Restart the video session
+                        }
+                    }) {
+                        Text("Flip Camera")
+                            .font(.headline)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
+                    .padding(.bottom, 20)
+
                 }
             } else {
                 Text("Camera access is required to use this feature.")

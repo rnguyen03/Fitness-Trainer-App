@@ -10,11 +10,6 @@ import AVFoundation
 import CoreVideo
 import Vision
 
-import UIKit
-import AVFoundation
-import CoreVideo
-import Vision
-
 class CameraViewController: UIViewController, VideoCaptureDelegate {
     var videoCapture: VideoCapture?
     var onKeypointsUpdate: (([PosePoint]) -> Void)?
@@ -36,6 +31,17 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
         }
         videoCapture?.delegate = self
     }
+    
+    func cameraDidSwitch(_ capture: VideoCapture) {
+        resetInferencingState()
+        setupCameraPreview() // Re-setup the camera preview after switching
+    }
+
+    func resetInferencingState() {
+            isInferencing = false
+            movingAverageFilters.removeAll()
+            onKeypointsUpdate?([])
+        }
 
     func setupVisionRequest() {
         request = VNCoreMLRequest(model: poseEstimationManager.getModel()) { [weak self] request, error in
@@ -46,15 +52,25 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
 
     func setupCameraPreview() {
         DispatchQueue.main.async {
+            // Remove any existing preview layers before adding a new one
+            self.view.layer.sublayers?.forEach { layer in
+                if layer is AVCaptureVideoPreviewLayer {
+                    layer.removeFromSuperlayer()
+                }
+            }
+
             if let previewLayer = self.videoCapture?.previewLayer {
                 previewLayer.frame = self.view.bounds
                 self.view.layer.addSublayer(previewLayer)
             }
+
+            // Add the joint drawing view layer on top of the camera preview
             self.drawingJointView.frame = self.view.bounds
             self.drawingJointView.backgroundColor = .clear
             self.view.addSubview(self.drawingJointView)
         }
     }
+
 
     func videoCapture(_ capture: VideoCapture, didCaptureVideoFrame pixelBuffer: CVPixelBuffer, timestamp: CMTime) {
         if !isInferencing {
@@ -63,10 +79,17 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
         }
     }
 
-    private func predictUsingVision(pixelBuffer: CVPixelBuffer) {
+    func predictUsingVision(pixelBuffer: CVPixelBuffer) {
+        // Ensure the Vision request exists and is set up
         guard let request = self.request else { return }
+        
         let handler = VNImageRequestHandler(cvPixelBuffer: pixelBuffer, options: [:])
-        try? handler.perform([request])
+        do {
+            try handler.perform([request])
+        } catch {
+            print("Vision request failed with error: \(error)")
+            isInferencing = false
+        }
     }
 
     private func visionRequestDidComplete(request: VNRequest, error: Error?) {
