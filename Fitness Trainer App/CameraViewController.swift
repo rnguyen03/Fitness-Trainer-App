@@ -96,6 +96,17 @@ class CameraViewController: UIViewController, VideoCaptureDelegate {
         }
 
         var predictedPoints = poseEstimationManager.postProcessor.convertToPredictedPoints(from: heatmaps)
+  
+        
+        /// Keypoint Print Debugging
+        ///  1. These layers are used to capture larger receptive fields, which helps the model learn spatial relationships over larger areas of the image. However, the trade-off is reduced resolution in the output feature maps, which results in lower-resolution keypoint predictions. If the model is reducing the resolution by a factor of 4, the keypoints’ positions would be on a 96x96 grid instead of the full resolution, explaining why coordinates are multiples of 4.
+        
+//        for point in predictedPoints {
+//            if let maxPoint = point?.maxPoint, let confidence = point?.maxConfidence {
+//                print("Predicted keypoint at: (\(Int(maxPoint.x * 96)), \(Int(maxPoint.y * 96))) with confidence \(confidence)")
+//            }
+//        }
+
 
         // Flip the points horizontally if using the front camera
         if videoCapture?.currentPosition == .front {
